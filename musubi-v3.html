@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MUSUBI — あなたの物語を、次の世代へ</title>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@400;600;800&family=Noto+Serif+JP:wght@300;400;500;600&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:   #0f0d09;
+    --paper: #faf8f3;
+    --cream: #f2ece0;
+    --warm:  #f7f3ec;
+    --gold:  #b8892a;
+    --gold2: #d4aa50;
+    --muted: #4a4238;
+    --light: #8a7e72;
+    --line:  #ddd5c8;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Noto Serif JP', serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ==============================
+     HERO
+  ============================== */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 28px;
+    text-align: center;
+    position: relative;
+  }
+
+  #hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 30%, rgba(184,137,42,0.08) 0%, transparent 60%),
+      repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(184,137,42,0.035) 59px, rgba(184,137,42,0.035) 60px);
+    pointer-events: none;
+  }
+
+  .h-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: up 0.9s 0.1s forwards;
+    position: relative;
+  }
+
+  .h-logo-mark svg { display:block; }
+
+  .h-logo-text {
+    font-family: 'Shippori Mincho B1', serif;
+    font-size: 1.35rem;
+    font-weight: 800;
+    letter-spacing: 0.28em;
+  }
+
+  .h-tag {
+    font-size: 0.72rem;
+    letter-spacing: 0.45em;
+    color: var(--gold);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 300;
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: up 0.9s 0.25s forwards;
+    position: relative;
+  }
+
+  .h-title {
+    font-family: 'Shippori Mincho B1', serif;
+    font-size: clamp(2.2rem, 6.5vw, 4.8rem);
+    font-weight: 800;
+    line-height: 1.4;
+    letter-spacing: 0.04em;
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: up 0.9s 0.4s forwards;
+    position: relative;
+  }
+
+  .h-title em {
+    font-style: normal;
+    color: var(--gold);
+  }
+
+  .h-copy {
+    font-size: clamp(1rem, 2.5vw, 1.15rem);
+    line-height: 2.3;
+    color: var(--muted);
+    font-weight: 400;
+    max-width: 500px;
+    margin-bottom: 52px;
+    opacity: 0;
+    animation: up 0.9s 0.55s forwards;
+    position: relative;
+  }
+
+  .h-copy strong { color: var(--ink); font-weight: 600; }
+
+  .h-btn {
+    background: var(--gold);
+    color: #fff;
+    border: none;
+    padding: 22px 72px;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.15rem;
+    letter-spacing: 0.2em;
+    cursor: pointer;
+    transition: all 0.35s;
+    font-weight: 500;
+    opacity: 0;
+    animation: up 0.9s 0.7s forwards;
+    position: relative;
+  }
+
+  .h-btn:hover { background: var(--ink); transform: translateY(-3px); box-shadow: 0 14px 40px rgba(0,0,0,0.15); }
+
+  .h-note {
+    margin-top: 20px;
+    font-size: 0.82rem;
+    color: var(--light);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    opacity: 0;
+    animation: up 0.9s 0.85s forwards;
+    position: relative;
+  }
+
+  .h-features {
+    display: flex;
+    gap: 36px;
+    margin-top: 64px;
+    flex-wrap: wrap;
+    justify-content: center;
+    opacity: 0;
+    animation: up 0.9s 1s forwards;
+    position: relative;
+  }
+
+  .h-feat { text-align:center; }
+  .h-feat-icon { font-size: 1.6rem; margin-bottom: 6px; }
+  .h-feat-text { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.12em; font-family:'Noto Sans JP',sans-serif; font-weight:300; }
+
+  /* ==============================
+     CHAPTER INTRO
+  ============================== */
+  #chapterIntro {
+    display: none;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 60px 28px;
+  }
+
+  #chapterIntro.active { display:flex; animation: up 0.7s forwards; }
+
+  .ci-num {
+    font-family: 'Shippori Mincho B1', serif;
+    font-size: 6rem;
+    font-weight: 800;
+    color: rgba(184,137,42,0.12);
+    line-height: 1;
+    margin-bottom: -16px;
+  }
+
+  .ci-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.45em;
+    color: var(--gold);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 300;
+    margin-bottom: 20px;
+  }
+
+  .ci-title {
+    font-family: 'Shippori Mincho B1', serif;
+    font-size: clamp(2rem, 6vw, 3.6rem);
+    font-weight: 800;
+    margin-bottom: 20px;
+    letter-spacing: 0.05em;
+  }
+
+  .ci-desc {
+    font-size: 1rem;
+    color: var(--muted);
+    line-height: 2;
+    font-weight: 400;
+    max-width: 420px;
+    margin-bottom: 48px;
+  }
+
+  .ci-btn {
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 18px 56px;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.05rem;
+    letter-spacing: 0.18em;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 500;
+  }
+
+  .ci-btn:hover { background: var(--gold); }
+
+  /* ==============================
+     APP
+  ============================== */
+  #app {
+    display: none;
+    max-width: 660px;
+    margin: 0 auto;
+    padding: 52px 28px 120px;
+  }
+
+  #app.active { display:block; }
+
+  .app-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 44px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .app-logo {
+    font-family: 'Shippori Mincho B1', serif;
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: 0.25em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .app-chapter-tag {
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 300;
+    border: 1px solid rgba(184,137,42,0.3);
+    padding: 5px 14px;
+    background: rgba(184,137,42,0.05);
+  }
+
+  /* Progress */
+  .prog-wrap { margin-bottom: 48px; }
+
+  .prog-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 10px;
+  }
+
+  .prog-label {
+    font-family: 'Shippori Mincho B1', serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .prog-pct {
+    font-size: 0.72rem;
+    color: var(--light);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+  }
+
+  .prog-track {
+    height: 2px;
+    background: var(--line);
+    margin-bottom: 10px;
+  }
+
+  .prog-fill {
+    height: 100%;
+    background: linear-gradient(to right, var(--gold), var(--gold2));
+    transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .prog-dots {
+    display: flex;
+    gap: 6px;
+  }
+
+  .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--line);
+    transition: all 0.4s;
+  }
+
+  .dot.done { background: var(--gold); }
+  .dot.now  { background: var(--gold); box-shadow: 0 0 0 3px rgba(184,137,42,0.2); }
+
+  /* Question */
+  .q-wrap { display:none; animation: up 0.5s forwards; }
+  .q-wrap.active { display:block; }
+
+  .q-chapter-tag {
+    font-size: 0.68rem;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 400;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .q-chapter-tag::before {
+    content: '';
+    width: 18px; height: 1px;
+    background: var(--gold);
+    display: block;
+  }
+
+  .q-title {
+    font-family: 'Shippori Mincho B1', serif;
+    font-size: clamp(1.45rem, 4vw, 1.9rem);
+    font-weight: 600;
+    line-height: 1.65;
+    letter-spacing: 0.02em;
+    margin-bottom: 16px;
+    color: var(--ink);
+  }
+
+  .q-hint {
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.9;
+    font-weight: 400;
+    margin-bottom: 10px;
+    padding-left: 14px;
+    border-left: 2px solid var(--line);
+  }
+
+  .q-example-wrap {
+    background: var(--warm);
+    border-left: 3px solid var(--gold2);
+    padding: 14px 18px;
+    margin-bottom: 24px;
+  }
+
+  .q-ex-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    color: var(--gold);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 400;
+    margin-bottom: 6px;
+  }
+
+  .q-ex-text {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.9;
+    font-weight: 300;
+  }
+
+  .q-input {
+    width: 100%;
+    background: var(--warm);
+    border: 1.5px solid var(--line);
+    padding: 18px 20px;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.1rem;
+    color: var(--ink);
+    outline: none;
+    resize: none;
+    line-height: 2;
+    font-weight: 400;
+    transition: border-color 0.3s, background 0.3s;
+    min-height: 130px;
+  }
+
+  .q-input:focus { border-color: var(--gold); background: #fff; }
+  .q-input::placeholder { color: #ccc; font-weight: 300; }
+
+  .char-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+  }
+
+  .char-tip {
+    font-size: 0.78rem;
+    color: var(--light);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 300;
+  }
+
+  .char-count {
+    font-size: 0.75rem;
+    color: var(--light);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 300;
+  }
+
+  /* Nav */
+  .nav-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 32px;
+  }
+
+  .btn-back {
+    flex: 0 0 auto;
+    background: transparent;
+    border: 1.5px solid var(--line);
+    padding: 15px 24px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.92rem;
+    color: var(--muted);
+    cursor: pointer;
+    letter-spacing: 0.08em;
+    transition: all 0.3s;
+    font-weight: 300;
+  }
+
+  .btn-back:hover { border-color: var(--muted); color: var(--ink); }
+
+  .btn-next {
+    flex: 1;
+    background: var(--ink);
+    border: none;
+    padding: 17px;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1rem;
+    color: var(--paper);
+    cursor: pointer;
+    letter-spacing: 0.14em;
+    transition: all 0.3s;
+    font-weight: 500;
+  }
+
+  .btn-next:hover { background: var(--gold); }
+
+  /* Photo */
+  .photo-wrap {
+    margin-top: 24px;
+    border: 1.5px dashed var(--line);
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    background: var(--warm);
+  }
+
+  .photo-wrap:hover { border-color: var(--gold); }
+  .photo-wrap input { position:absolute; inset:0; opacity:0; cursor:pointer; }
+  .photo-icon { font-size:1.8rem; margin-bottom:6px; }
+  .photo-label { font-size:0.88rem; color:var(--muted); font-family:'Noto Sans JP',sans-serif; font-weight:300; letter-spacing:0.1em; }
+  .photo-sub { font-size:0.75rem; color:var(--light); margin-top:4px; font-family:'Noto Sans JP',sans-serif; font-weight:300; }
+
+  .photo-preview {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+    justify-content: center;
+  }
+
+  .photo-thumb { width:72px; height:72px; object-fit:cover; border:1px solid var(--line); }
+
+  /* Generate */
+  .btn-gen {
+    width: 100%;
+    background: var(--gold);
+    border: none;
+    padding: 22px;
+    font-family: 'Shippori Mincho B1', serif;
+    font-size: 1.15rem;
+    color: #fff;
+    cursor: pointer;
+    letter-spacing: 0.2em;
+    transition: all 0.4s;
+    margin-top: 32px;
+    font-weight: 600;
+  }
+
+  .btn-gen:hover { background: var(--ink); transform:translateY(-2px); box-shadow:0 12px 40px rgba(0,0,0,0.18); }
+  .btn-gen:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
+
+  /* ==============================
+     LOADING
+  ============================== */
+  #loading {
+    display: none;
+    text-align: center;
+    padding: 100px 32px;
+    max-width: 460px;
+    margin: 0 auto;
+  }
+
+  #loading.active { display:block; }
+
+  .ld-visual {
+    width: 72px; height: 72px;
+    margin: 0 auto 36px;
+    position: relative;
+  }
+
+  .ld-ring {
+    position: absolute; inset:0;
+    border: 2px solid var(--line);
+    border-radius: 50%;
+    border-top-color: var(--gold);
+    animation: spin 1.5s linear infinite;
+  }
+
+  .ld-ring2 {
+    position: absolute; inset:12px;
+    border: 1.5px solid var(--line);
+    border-radius: 50%;
+    border-bottom-color: var(--gold2);
+    animation: spin 2s linear infinite reverse;
+  }
+
+  .ld-center {
+    position: absolute; inset:0;
+    display: flex; align-items:center; justify-content:center;
+    font-size: 1.5rem;
+  }
+
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  .ld-title {
+    font-family: 'Shippori Mincho B1', serif;
+    font-size: 1.35rem; font-weight:600;
+    color: var(--ink); margin-bottom:10px;
+    letter-spacing: 0.05em;
+  }
+
+  .ld-sub {
+    font-size: 0.88rem; color:var(--muted);
+    line-height:2; font-weight:300;
+    font-family:'Noto Sans JP',sans-serif;
+  }
+
+  .ld-dots {
+    display:flex; justify-content:center;
+    gap:8px; margin-top:24px;
+  }
+
+  .ld-dots span {
+    width:7px; height:7px;
+    background:var(--gold); border-radius:50%;
+    animation: bounce 1.4s ease-in-out infinite;
+  }
+
+  .ld-dots span:nth-child(2) { animation-delay:0.2s; }
+  .ld-dots span:nth-child(3) { animation-delay:0.4s; }
+
+  @keyframes bounce {
+    0%,80%,100% { transform:scale(0.5); opacity:0.3; }
+    40% { transform:scale(1); opacity:1; }
+  }
+
+  /* ==============================
+     RESULT
+  ============================== */
+  #result {
+    display: none;
+    max-width: 660px;
+    margin: 0 auto;
+    padding: 52px 28px 120px;
+  }
+
+  #result.active { display:block; animation:up 0.8s forwards; }
+
+  .result-book {
+    background: #fff;
+    border: 1px solid var(--line);
+    box-shadow: 0 4px 32px rgba(0,0,0,0.07), 8px 8px 0 var(--cream);
+    padding: 48px 40px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .result-book::before {
+    content: '';
+    position: absolute;
+    left:0; top:0; bottom:0;
+    width: 5px;
+    background: linear-gradient(to bottom, var(--gold), var(--gold2));
+  }
+
+  .result-book::after {
+    content: 'MUSUBI';
+    position: absolute;
+    right: -12px; top: 20px;
+    font-family: 'Shippori Mincho B1', serif;
+    font-size: 5rem; font-weight:800;
+    color: rgba(184,137,42,0.04);
+    line-height:1;
+    letter-spacing:0.1em;
+    writing-mode: vertical-rl;
+  }
+
+  .r-label {
+    font-size: 0.66rem; letter-spacing:0.5em;
+    color:var(--gold); font-family:'Noto Sans JP',sans-serif;
+    font-weight:400; margin-bottom:18px;
+    display:flex; align-items:center; gap:10px;
+  }
+
+  .r-label::after { content:''; flex:1; height:1px; background:var(--line); }
+
+  .r-title {
+    font-family: 'Shippori Mincho B1', serif;
+    font-size: clamp(1.7rem, 5vw, 2.5rem);
+    font-weight: 800; line-height:1.4;
+    margin-bottom:6px; letter-spacing:0.03em;
+  }
+
+  .r-date {
+    font-size: 0.78rem; color:var(--light);
+    font-family:'Noto Sans JP',sans-serif;
+    font-weight:300; letter-spacing:0.2em;
+    margin-bottom:32px;
+  }
+
+  .r-photos {
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px,1fr));
+    gap:8px; margin-bottom:32px;
+  }
+
+  .r-photo { aspect-ratio:1; object-fit:cover; width:100%; border:1px solid var(--line); }
+
+  .r-divider {
+    display:flex; align-items:center; gap:14px;
+    margin-bottom:28px;
+    color:var(--gold); font-size:0.75rem;
+    letter-spacing:0.4em;
+    font-family:'Noto Sans JP',sans-serif; font-weight:300;
+  }
+
+  .r-divider::before, .r-divider::after {
+    content:''; flex:1; height:1px; background:var(--line);
+  }
+
+  .r-body {
+    font-size: 1.05rem; line-height:2.4;
+    font-weight:400; color:var(--ink);
+    white-space:pre-wrap;
+  }
+
+  .r-body::first-letter {
+    font-family:'Shippori Mincho B1',serif;
+    font-size:3.6rem; font-weight:800;
+    float:left; line-height:0.75;
+    margin-right:10px; margin-top:10px;
+    color:var(--gold);
+  }
+
+  .r-end {
+    text-align:center; margin-top:36px;
+    padding-top:28px; border-top:1px solid var(--line);
+    font-size:0.75rem; letter-spacing:0.45em;
+    color:var(--light); font-family:'Noto Sans JP',sans-serif; font-weight:300;
+  }
+
+  /* Next chapter */
+  .next-card {
+    background:var(--warm); border:1px solid var(--line);
+    padding:28px 32px; margin-bottom:24px;
+    position:relative; overflow:hidden;
+  }
+
+  .next-card::after {
+    content:'第二章';
+    position:absolute; right:-4px; top:-4px;
+    font-family:'Shippori Mincho B1',serif;
+    font-size:3.5rem; font-weight:800;
+    color:rgba(184,137,42,0.06); line-height:1;
+  }
+
+  .nc-label {
+    font-size:0.66rem; letter-spacing:0.4em;
+    color:var(--gold); font-family:'Noto Sans JP',sans-serif;
+    font-weight:400; margin-bottom:10px;
+  }
+
+  .nc-title {
+    font-family:'Shippori Mincho B1',serif;
+    font-size:1.15rem; font-weight:600;
+    margin-bottom:6px; letter-spacing:0.04em;
+  }
+
+  .nc-text {
+    font-size:0.88rem; color:var(--muted);
+    line-height:1.9; font-weight:300;
+    font-family:'Noto Sans JP',sans-serif;
+  }
+
+  /* Actions */
+  .r-actions {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+
+  .btn-act {
+    padding:15px; font-family:'Noto Sans JP',sans-serif;
+    font-size:0.88rem; letter-spacing:0.1em;
+    cursor:pointer; transition:all 0.3s;
+    font-weight:400; text-align:center; border:none;
+  }
+
+  .btn-act.out {
+    background:transparent; border:1.5px solid var(--line); color:var(--muted);
+  }
+
+  .btn-act.out:hover { border-color:var(--ink); color:var(--ink); }
+
+  .btn-act.fill {
+    background:var(--ink); color:var(--paper);
+    grid-column:1/-1; padding:20px; font-size:0.95rem;
+  }
+
+  .btn-act.fill:hover { background:var(--gold); }
+
+  /* Upgrade prompt */
+  .upgrade-card {
+    background: linear-gradient(135deg, var(--ink) 0%, #2a2018 100%);
+    padding: 32px;
+    margin-top: 24px;
+    text-align: center;
+    color: var(--paper);
+  }
+
+  .ug-label {
+    font-size:0.68rem; letter-spacing:0.4em;
+    color:var(--gold2); font-family:'Noto Sans JP',sans-serif;
+    font-weight:300; margin-bottom:14px;
+  }
+
+  .ug-title {
+    font-family:'Shippori Mincho B1',serif;
+    font-size:1.3rem; font-weight:600;
+    margin-bottom:10px; letter-spacing:0.05em;
+  }
+
+  .ug-text {
+    font-size:0.85rem; color:rgba(250,248,243,0.7);
+    line-height:1.9; font-weight:300;
+    font-family:'Noto Sans JP',sans-serif;
+    margin-bottom:24px;
+  }
+
+  .ug-plans {
+    display:grid; grid-template-columns:1fr 1fr 1fr;
+    gap:8px; margin-bottom:20px;
+  }
+
+  .ug-plan {
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.12);
+    padding:14px 8px; text-align:center;
+  }
+
+  .ug-plan.popular {
+    background:rgba(184,137,42,0.2);
+    border-color:var(--gold);
+  }
+
+  .ug-plan-name {
+    font-size:0.7rem; letter-spacing:0.2em;
+    color:rgba(250,248,243,0.6);
+    font-family:'Noto Sans JP',sans-serif;
+    font-weight:300; margin-bottom:6px;
+  }
+
+  .ug-plan.popular .ug-plan-name { color:var(--gold2); }
+
+  .ug-plan-price {
+    font-family:'Shippori Mincho B1',serif;
+    font-size:1.2rem; font-weight:800;
+    color:var(--paper);
+  }
+
+  .ug-plan-sub {
+    font-size:0.68rem; color:rgba(250,248,243,0.5);
+    font-family:'Noto Sans JP',sans-serif; font-weight:300;
+    margin-top:2px;
+  }
+
+  .ug-plan-chapters {
+    font-size:0.72rem; color:rgba(250,248,243,0.6);
+    font-family:'Noto Sans JP',sans-serif; font-weight:300;
+    margin-top:4px;
+  }
+
+  .btn-ug {
+    background:var(--gold); color:#fff;
+    border:none; padding:16px 48px;
+    font-family:'Noto Serif JP',serif;
+    font-size:0.95rem; letter-spacing:0.15em;
+    cursor:pointer; transition:all 0.3s; font-weight:500;
+  }
+
+  .btn-ug:hover { background:var(--gold2); }
+
+  /* ==============================
+     ANIMATIONS
+  ============================== */
+  @keyframes up {
+    from { opacity:0; transform:translateY(22px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  /* Toast */
+  .toast {
+    position:fixed; bottom:28px; left:50%;
+    transform:translateX(-50%) translateY(80px);
+    background:var(--ink); color:var(--paper);
+    padding:13px 28px; font-size:0.88rem;
+    font-family:'Noto Sans JP',sans-serif;
+    letter-spacing:0.1em; transition:transform 0.4s;
+    z-index:200; font-weight:300;
+  }
+
+  .toast.show { transform:translateX(-50%) translateY(0); }
+
+  @media(max-width:520px) {
+    .result-book { padding:32px 22px; }
+    .r-actions { grid-template-columns:1fr; }
+    .btn-act.fill { grid-column:1; }
+    .ug-plans { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<section id="hero">
+  <div class="h-logo">
+    <div class="h-logo-mark">
+      <svg width="30" height="30" viewBox="0 0 56 56" fill="none">
+        <path d="M22 28C22 16,10 10,8 20C6 30,16 36,22 28Z" stroke="#b8892a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M34 28C34 16,46 10,48 20C50 30,40 36,34 28Z" stroke="#b8892a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M14 38C20 30,28 26,28 26C28 26,36 30,42 38" stroke="#0f0d09" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        <path d="M14 18C20 26,28 28,28 28C28 28,36 26,42 18" stroke="#0f0d09" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        <circle cx="28" cy="28" r="3" fill="#b8892a"/>
+      </svg>
+    </div>
+    <span class="h-logo-text">MUSUBI</span>
+  </div>
+
+  <p class="h-tag">AI 自叙伝サービス · お試し無料</p>
+
+  <h1 class="h-title">
+    有名じゃなくていい。<br>
+    あなたの人生には、<br>
+    <em>語るべき物語がある。</em>
+  </h1>
+
+  <p class="h-copy">
+    質問に答えるだけで、<strong>あなたの人生が美しい一冊に。</strong><br>
+    少しずつ積み上げて、家族への最高の贈り物を作りましょう。
+  </p>
+
+  <button class="h-btn" onclick="showChapterIntro(1)">無料ではじめる</button>
+  <p class="h-note">📱 操作は簡単 &nbsp;·&nbsp; 🔒 プライバシー保護 &nbsp;·&nbsp; 📖 3章まで無料</p>
+
+  <div class="h-features">
+    <div class="h-feat"><div class="h-feat-icon">✍️</div><div class="h-feat-text">質問に答えるだけ</div></div>
+    <div class="h-feat"><div class="h-feat-icon">📖</div><div class="h-feat-text">一冊の本になる</div></div>
+    <div class="h-feat"><div class="h-feat-icon">📷</div><div class="h-feat-text">写真も追加できる</div></div>
+    <div class="h-feat"><div class="h-feat-icon">👨‍👩‍👧‍👦</div><div class="h-feat-text">家族と共有</div></div>
+  </div>
+</section>
+
+<!-- ===== CHAPTER INTRO ===== -->
+<section id="chapterIntro">
+  <div class="ci-num" id="ciNum">一</div>
+  <p class="ci-label" id="ciLabel">CHAPTER 01</p>
+  <h2 class="ci-title" id="ciTitle">誕生・ふるさと</h2>
+  <p class="ci-desc" id="ciDesc">あなたが生まれた場所、育った風景、家族の記憶。そこから、あなたの物語は始まります。</p>
+  <button class="ci-btn" id="ciBtn" onclick="">はじめる　→</button>
+</section>
+
+<!-- ===== APP ===== -->
+<section id="app">
+  <div class="app-top">
+    <div class="app-logo">
+      <svg width="22" height="22" viewBox="0 0 56 56" fill="none">
+        <path d="M22 28C22 16,10 10,8 20C6 30,16 36,22 28Z" stroke="#b8892a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path d="M34 28C34 16,46 10,48 20C50 30,40 36,34 28Z" stroke="#b8892a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <circle cx="28" cy="28" r="3.5" fill="#b8892a"/>
+      </svg>
+      MUSUBI
+    </div>
+    <div class="app-chapter-tag" id="chapterTag">第一章</div>
+  </div>
+
+  <div class="prog-wrap">
+    <div class="prog-top">
+      <span class="prog-label" id="progLabel">質問 1 ／ 9</span>
+      <span class="prog-pct" id="progPct">11%</span>
+    </div>
+    <div class="prog-track">
+      <div class="prog-fill" id="progFill" style="width:11%"></div>
+    </div>
+    <div class="prog-dots" id="progDots"></div>
+  </div>
+
+  <!-- 9問 -->
+  <!-- Q1 -->
+  <div class="q-wrap active" id="q1">
+    <div class="q-chapter-tag">第一章 · 誕生・ふるさと</div>
+    <h2 class="q-title">生まれ育った場所で、今でも目に浮かぶ景色はありますか？</h2>
+    <p class="q-hint">海、山、田んぼ、商店街…どんな景色でも構いません。</p>
+    <div class="q-example-wrap">
+      <p class="q-ex-label">記入例</p>
+      <p class="q-ex-text">実家の縁側から見えた、夕焼けに染まる田んぼの風景です。秋になると稲穂が揺れて、空が橙色に輝いていました。</p>
+    </div>
+    <textarea class="q-input" id="a1" placeholder="ここに書いてください…" rows="5" oninput="onInput(1)"></textarea>
+    <div class="char-row">
+      <span class="char-tip">思い出した言葉を、そのまま書いてください。</span>
+      <span class="char-count" id="c1">0文字</span>
+    </div>
+    <div class="nav-row">
+      <button class="btn-next" onclick="nextQ(1)">次の質問へ　→</button>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-wrap" id="q2">
+    <div class="q-chapter-tag">第一章 · 誕生・ふるさと</div>
+    <h2 class="q-title">子供の頃の家で、一番好きだった場所はどこでしたか？</h2>
+    <p class="q-hint">台所、縁側、押し入れの中…どんな場所でも。</p>
+    <div class="q-example-wrap">
+      <p class="q-ex-label">記入例</p>
+      <p class="q-ex-text">祖母がいつも座っていた縁側です。そこで並んでお茶を飲みながら、他愛もない話をしたのが懐かしいです。</p>
+    </div>
+    <textarea class="q-input" id="a2" placeholder="ここに書いてください…" rows="5" oninput="onInput(2)"></textarea>
+    <div class="char-row">
+      <span class="char-tip">短くても大丈夫です。</span>
+      <span class="char-count" id="c2">0文字</span>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="prevQ(2)">← 戻る</button>
+      <button class="btn-next" onclick="nextQ(2)">次の質問へ　→</button>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q-wrap" id="q3">
+    <div class="q-chapter-tag">第一章 · 誕生・ふるさと</div>
+    <h2 class="q-title">お父さんやお母さんの、忘れられない言葉や姿はありますか？</h2>
+    <p class="q-hint">ふとした瞬間の言葉、働く背中、料理の匂い…なんでも。</p>
+    <div class="q-example-wrap">
+      <p class="q-ex-label">記入例</p>
+      <p class="q-ex-text">「人に迷惑をかけるな」が父の口癖でした。厳しい人でしたが、その言葉が今でも私の軸になっています。</p>
+    </div>
+    <textarea class="q-input" id="a3" placeholder="ここに書いてください…" rows="5" oninput="onInput(3)"></textarea>
+    <div class="char-row">
+      <span class="char-tip"></span>
+      <span class="char-count" id="c3">0文字</span>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="prevQ(3)">← 戻る</button>
+      <button class="btn-next" onclick="showChapterIntro2(3)">第二章へ　→</button>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q-wrap" id="q4">
+    <div class="q-chapter-tag">第二章 · 忘れられない記憶</div>
+    <h2 class="q-title">人生で一番笑った出来事を教えてください。</h2>
+    <p class="q-hint">友人との失敗、家族のハプニング、思わず吹き出した瞬間…</p>
+    <div class="q-example-wrap">
+      <p class="q-ex-label">記入例</p>
+      <p class="q-ex-text">結婚式のスピーチで噛みすぎて、会場中が笑いに包まれました。恥ずかしかったですが、一番の思い出になりました。</p>
+    </div>
+    <textarea class="q-input" id="a4" placeholder="ここに書いてください…" rows="5" oninput="onInput(4)"></textarea>
+    <div class="char-row">
+      <span class="char-tip"></span>
+      <span class="char-count" id="c4">0文字</span>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="prevQ(4)">← 戻る</button>
+      <button class="btn-next" onclick="nextQ(4)">次の質問へ　→</button>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="q-wrap" id="q5">
+    <div class="q-chapter-tag">第二章 · 忘れられない記憶</div>
+    <h2 class="q-title">人生で一番ドキドキした瞬間はいつですか？</h2>
+    <p class="q-hint">告白、試験、初めての仕事、旅立ちの日…どんな瞬間でも。</p>
+    <div class="q-example-wrap">
+      <p class="q-ex-label">記入例</p>
+      <p class="q-ex-text">就職の面接結果を待っていた夜。電話が鳴るたびに心臓が止まりそうでした。あの緊張感は今も忘れられません。</p>
+    </div>
+    <textarea class="q-input" id="a5" placeholder="ここに書いてください…" rows="5" oninput="onInput(5)"></textarea>
+    <div class="char-row">
+      <span class="char-tip"></span>
+      <span class="char-count" id="c5">0文字</span>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="prevQ(5)">← 戻る</button>
+      <button class="btn-next" onclick="nextQ(5)">次の質問へ　→</button>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="q-wrap" id="q6">
+    <div class="q-chapter-tag">第二章 · 忘れられない記憶</div>
+    <h2 class="q-title">子供の頃、夢中になって時間を忘れたことは何でしたか？</h2>
+    <p class="q-hint">遊び、読書、スポーツ、虫取り…なんでも構いません。</p>
+    <div class="q-example-wrap">
+      <p class="q-ex-label">記入例</p>
+      <p class="q-ex-text">近所の空き地での野球です。日が暮れて何も見えなくなるまで、毎日ボールを追いかけていました。</p>
+    </div>
+    <textarea class="q-input" id="a6" placeholder="ここに書いてください…" rows="5" oninput="onInput(6)"></textarea>
+    <div class="char-row">
+      <span class="char-tip"></span>
+      <span class="char-count" id="c6">0文字</span>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="prevQ(6)">← 戻る</button>
+      <button class="btn-next" onclick="showChapterIntro3(6)">第三章へ　→</button>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="q-wrap" id="q7">
+    <div class="q-chapter-tag">第三章 · 大切な人</div>
+    <h2 class="q-title">あなたの人生に一番影響を与えた人は誰ですか？その人のどこに惹かれましたか？</h2>
+    <p class="q-hint">家族、恩師、友人、憧れの人…誰でも構いません。</p>
+    <div class="q-example-wrap">
+      <p class="q-ex-label">記入例</p>
+      <p class="q-ex-text">中学の担任の先生です。どんな生徒にも真剣に向き合う姿勢が、私の人生観を大きく変えました。</p>
+    </div>
+    <textarea class="q-input" id="a7" placeholder="ここに書いてください…" rows="5" oninput="onInput(7)"></textarea>
+    <div class="char-row">
+      <span class="char-tip"></span>
+      <span class="char-count" id="c7">0文字</span>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="prevQ(7)">← 戻る</button>
+      <button class="btn-next" onclick="nextQ(7)">次の質問へ　→</button>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="q-wrap" id="q8">
+    <div class="q-chapter-tag">第三章 · 大切な人</div>
+    <h2 class="q-title">大切な人と過ごした、特別な一日を教えてください。</h2>
+    <p class="q-hint">どこへ行った、何を食べた、何を話した…細かいことも大歓迎です。</p>
+    <div class="q-example-wrap">
+      <p class="q-ex-label">記入例</p>
+      <p class="q-ex-text">父と二人で行った温泉旅行。普段無口な父が、その夜だけは昔の話をたくさんしてくれました。</p>
+    </div>
+    <textarea class="q-input" id="a8" placeholder="ここに書いてください…" rows="5" oninput="onInput(8)"></textarea>
+    <div class="char-row">
+      <span class="char-tip"></span>
+      <span class="char-count" id="c8">0文字</span>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" onclick="prevQ(8)">← 戻る</button>
+      <button class="btn-next" onclick="nextQ(8)">次の質問へ　→</button>
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="q-wrap" id="q9">
+    <div class="q-chapter-tag">第三章 · 大切な人</div>
+    <h2 class="q-title">今、一番「ありがとう」を伝えたい人は誰ですか？</h2>
+    <p class="q-hint">もう会えない人でも、恥ずかしくて言えない人でも構いません。</p>
+    <div class="q-example-wrap">
+      <p class="q-ex-label">記入例</p>
+      <p class="q-ex-text">亡くなった母です。生きているうちに一度も「ありがとう」と言えなかった。この本が、その代わりになればと思います。</p>
+    </div>
+    <textarea class="q-input" id="a9" placeholder="ここに書いてください…" rows="5" oninput="onInput(9)"></textarea>
+    <div class="char-row">
+      <span class="char-tip"></span>
+      <span class="char-count" id="c9">0文字</span>
+    </div>
+
+    <div class="photo-wrap" style="margin-top:24px">
+      <input type="file" accept="image/*" multiple onchange="handlePhotos(event)">
+      <div class="photo-icon">📷</div>
+      <p class="photo-label">思い出の写真を追加する（任意）</p>
+      <p class="photo-sub">大切な人との一枚・故郷の風景など</p>
+      <div class="photo-preview" id="photoPreview"></div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn-back" onclick="prevQ(9)">← 戻る</button>
+    </div>
+
+    <button class="btn-gen" onclick="generate()">✦ わたしの物語を生成する</button>
+  </div>
+</section>
+
+<!-- ===== LOADING ===== -->
+<section id="loading">
+  <div class="ld-visual">
+    <div class="ld-ring"></div>
+    <div class="ld-ring2"></div>
+    <div class="ld-center">📖</div>
+  </div>
+  <h2 class="ld-title">物語を紡いでいます</h2>
+  <p class="ld-sub">あなたの言葉を、丁寧に文章にしています。<br>少しだけお待ちください。</p>
+  <div class="ld-dots"><span></span><span></span><span></span></div>
+</section>
+
+<!-- ===== RESULT ===== -->
+<section id="result">
+  <div class="result-book">
+    <div class="r-label">MUSUBI · わたしの物語 · お試し版</div>
+    <h2 class="r-title">はじまりの記憶</h2>
+    <p class="r-date" id="rDate"></p>
+    <div class="r-photos" id="rPhotos"></div>
+    <div class="r-divider">第一章〜第三章</div>
+    <div class="r-body" id="rBody"></div>
+    <div class="r-end">— お試し版 · 3章完 —</div>
+  </div>
+
+  <div class="next-card">
+    <p class="nc-label">NEXT · さらに続けるには</p>
+    <h3 class="nc-title">第四章「青春」以降を書きませんか？</h3>
+    <p class="nc-text">有料プランにアップグレードすると、最大10章まで書けます。完成した本はPDFで出力、製本して家族へのプレゼントにもなります。</p>
+  </div>
+
+  <div class="upgrade-card">
+    <p class="ug-label">UPGRADE · プランを選ぶ</p>
+    <h3 class="ug-title">あなたの物語を、完成させましょう</h3>
+    <p class="ug-text">3章の先に、あなたの人生の核心があります。</p>
+    <div class="ug-plans">
+      <div class="ug-plan">
+        <div class="ug-plan-name">ライト</div>
+        <div class="ug-plan-price">¥480</div>
+        <div class="ug-plan-sub">/月</div>
+        <div class="ug-plan-chapters">5章まで</div>
+      </div>
+      <div class="ug-plan popular">
+        <div class="ug-plan-name">スタンダード</div>
+        <div class="ug-plan-price">¥980</div>
+        <div class="ug-plan-sub">/月</div>
+        <div class="ug-plan-chapters">7章まで</div>
+      </div>
+      <div class="ug-plan">
+        <div class="ug-plan-name">プレミアム</div>
+        <div class="ug-plan-price">¥1,980</div>
+        <div class="ug-plan-sub">/月</div>
+        <div class="ug-plan-chapters">10章まで</div>
+      </div>
+    </div>
+    <button class="btn-ug">プランを選ぶ　→</button>
+  </div>
+
+  <div class="r-actions" style="margin-top:16px">
+    <button class="btn-act out" onclick="copyText()">📋 コピー</button>
+    <button class="btn-act out" onclick="restartApp()">↺ やり直す</button>
+    <button class="btn-act fill" onclick="shareStory()">📖 家族に届ける</button>
+  </div>
+</section>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // Data
+  const chapters = [
+    { num:'一', label:'CHAPTER 01', title:'誕生・ふるさと', desc:'あなたが生まれた場所、育った風景、家族の記憶。そこから、あなたの物語は始まります。', qs:[1,2,3] },
+    { num:'二', label:'CHAPTER 02', title:'忘れられない記憶', desc:'笑った日、ドキドキした瞬間、夢中になったこと。記憶の中の、あなたらしさを掘り起こします。', qs:[4,5,6] },
+    { num:'三', label:'CHAPTER 03', title:'大切な人', desc:'あなたの人生を彩った人たち。その出会いと感謝を、言葉にしていきましょう。', qs:[7,8,9] }
+  ];
+
+  let currentQ = 1;
+  const total = 9;
+  let photos = [];
+
+  // Build dots
+  const dotsEl = document.getElementById('progDots');
+  for(let i=1;i<=total;i++){
+    const d=document.createElement('div');
+    d.className='dot'+(i===1?' now':'');
+    d.id='dot'+i;
+    dotsEl.appendChild(d);
+  }
+
+  function showChapterIntro(ch) {
+    document.getElementById('hero').style.display='none';
+    const c=chapters[ch-1];
+    document.getElementById('ciNum').textContent=c.num;
+    document.getElementById('ciLabel').textContent=c.label;
+    document.getElementById('ciTitle').textContent=c.title;
+    document.getElementById('ciDesc').textContent=c.desc;
+    document.getElementById('ciBtn').onclick=()=>startChapter(ch);
+    document.getElementById('chapterIntro').classList.add('active');
+    window.scrollTo(0,0);
+  }
+
+  function startChapter(ch) {
+    document.getElementById('chapterIntro').classList.remove('active');
+    document.getElementById('app').classList.add('active');
+    const firstQ=chapters[ch-1].qs[0];
+    goToQ(firstQ);
+    updateChapterTag(ch);
+    window.scrollTo(0,0);
+  }
+
+  function showChapterIntro2(fromQ) {
+    const val=document.getElementById('a'+fromQ).value.trim();
+    if(!val){showToast('少しだけ書いてみてください 😊');return;}
+    document.getElementById('app').classList.remove('active');
+    document.getElementById('chapterIntro').classList.add('active');
+    const c=chapters[1];
+    document.getElementById('ciNum').textContent=c.num;
+    document.getElementById('ciLabel').textContent=c.label;
+    document.getElementById('ciTitle').textContent=c.title;
+    document.getElementById('ciDesc').textContent=c.desc;
+    document.getElementById('ciBtn').onclick=()=>startChapter(2);
+    window.scrollTo(0,0);
+  }
+
+  function showChapterIntro3(fromQ) {
+    const val=document.getElementById('a'+fromQ).value.trim();
+    if(!val){showToast('少しだけ書いてみてください 😊');return;}
+    document.getElementById('app').classList.remove('active');
+    document.getElementById('chapterIntro').classList.add('active');
+    const c=chapters[2];
+    document.getElementById('ciNum').textContent=c.num;
+    document.getElementById('ciLabel').textContent=c.label;
+    document.getElementById('ciTitle').textContent=c.title;
+    document.getElementById('ciDesc').textContent=c.desc;
+    document.getElementById('ciBtn').onclick=()=>startChapter(3);
+    window.scrollTo(0,0);
+  }
+
+  function updateChapterTag(ch) {
+    const labels=['第一章','第二章','第三章'];
+    document.getElementById('chapterTag').textContent=labels[ch-1];
+  }
+
+  function goToQ(n) {
+    document.querySelectorAll('.q-wrap').forEach(el=>el.classList.remove('active'));
+    document.getElementById('q'+n).classList.add('active');
+    currentQ=n;
+    updateProgress(n);
+  }
+
+  function nextQ(n) {
+    const val=document.getElementById('a'+n).value.trim();
+    if(!val){showToast('少しだけ書いてみてください 😊');return;}
+    goToQ(n+1);
+    // update chapter tag
+    if(n+1<=3) updateChapterTag(1);
+    else if(n+1<=6) updateChapterTag(2);
+    else updateChapterTag(3);
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function prevQ(n) {
+    goToQ(n-1);
+    if(n-1<=3) updateChapterTag(1);
+    else if(n-1<=6) updateChapterTag(2);
+    else updateChapterTag(3);
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function updateProgress(n) {
+    const pct=Math.round((n/total)*100);
+    document.getElementById('progFill').style.width=pct+'%';
+    document.getElementById('progLabel').textContent='質問 '+n+' ／ '+total;
+    document.getElementById('progPct').textContent=pct+'%';
+    for(let i=1;i<=total;i++){
+      const d=document.getElementById('dot'+i);
+      d.className='dot'+(i<n?' done':i===n?' now':'');
+    }
+  }
+
+  function onInput(n) {
+    const len=document.getElementById('a'+n).value.length;
+    document.getElementById('c'+n).textContent=len+'文字';
+  }
+
+  function handlePhotos(e) {
+    Array.from(e.target.files).forEach(f=>{
+      const r=new FileReader();
+      r.onload=ev=>{
+        photos.push(ev.target.result);
+        const img=document.createElement('img');
+        img.src=ev.target.result; img.className='photo-thumb';
+        document.getElementById('photoPreview').appendChild(img);
+      };
+      r.readAsDataURL(f);
+    });
+  }
+
+  async function generate() {
+    const answers=[];
+    for(let i=1;i<=9;i++) answers.push(document.getElementById('a'+i).value.trim());
+    if(!answers[8]){showToast('最後の質問にもお答えください');return;}
+
+    document.getElementById('app').classList.remove('active');
+    document.getElementById('loading').classList.add('active');
+    window.scrollTo(0,0);
+
+    const prompt=`あなたは心ある自叙伝作家です。以下の方の人生を、3章構成で美しく書いてください。
+
+【スタイル】
+・一人称（私は）で書く
+・シンプルで温かい文体、難しい言葉は使わない
+・各章200〜250字、合計700字前後
+・情景描写を交えて、読んだ家族が目に浮かぶように
+・章の間は空行を1行入れる
+・タイトル・章タイトルは不要、本文のみ
+
+【回答】
+第一章「誕生・ふるさと」
+Q1 目に浮かぶ景色：${answers[0]}
+Q2 好きだった場所：${answers[1]}
+Q3 親の言葉・姿：${answers[2]}
+
+第二章「忘れられない記憶」
+Q4 一番笑った出来事：${answers[3]}
+Q5 一番ドキドキした瞬間：${answers[4]}
+Q6 夢中になったこと：${answers[5]}
+
+第三章「大切な人」
+Q7 影響を与えた人：${answers[6]}
+Q8 特別な一日：${answers[7]}
+Q9 ありがとうを伝えたい人：${answers[8]}`;
+
+    try {
+      const res=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          model:'claude-sonnet-4-20250514',
+          max_tokens:1000,
+          messages:[{role:'user',content:prompt}]
+        })
+      });
+      const data=await res.json();
+      showResult(data.content?.[0]?.text||'エラーが発生しました。');
+    } catch(e) {
+      showResult('通信エラーが発生しました。もう一度お試しください。');
+    }
+  }
+
+  function showResult(text) {
+    document.getElementById('loading').classList.remove('active');
+    const now=new Date();
+    document.getElementById('rDate').textContent=
+      now.getFullYear()+'年'+(now.getMonth()+1)+'月'+now.getDate()+'日 · お試し版';
+    const ph=document.getElementById('rPhotos');
+    photos.forEach(src=>{
+      const img=document.createElement('img');
+      img.src=src; img.className='r-photo';
+      ph.appendChild(img);
+    });
+    document.getElementById('rBody').textContent=text;
+    document.getElementById('result').classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function copyText() {
+    navigator.clipboard.writeText(document.getElementById('rBody').textContent)
+      .then(()=>showToast('コピーしました'));
+  }
+
+  function shareStory() {
+    const t=document.getElementById('rBody').textContent;
+    if(navigator.share){
+      navigator.share({title:'わたしの物語',text:t.substring(0,200)+'…'});
+    } else {
+      copyText();
+      showToast('テキストをコピーしました。家族に送ってください');
+    }
+  }
+
+  function restartApp() {
+    document.getElementById('result').classList.remove('active');
+    for(let i=1;i<=9;i++){
+      document.getElementById('a'+i).value='';
+      document.getElementById('c'+i).textContent='0文字';
+    }
+    photos=[];
+    document.getElementById('photoPreview').innerHTML='';
+    document.getElementById('rPhotos').innerHTML='';
+    document.getElementById('rBody').textContent='';
+    document.getElementById('hero').style.display='flex';
+    window.scrollTo(0,0);
+  }
+
+  function showToast(msg) {
+    const t=document.getElementById('toast');
+    t.textContent=msg; t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'),2800);
+  }
+</script>
+</body>
+</html>
